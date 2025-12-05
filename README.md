@@ -1,6 +1,6 @@
 # Employee Web Portal
 
-**Employee Web Portal** is a web application to manage employee information — profiles, attendance, roles, and other employee-related data.
+**Employee Web Portal** is a web application to manage employee information — profiles, roles, and other employee-related data.
 
 ## Features
 - Add / edit / delete employee profiles  
@@ -17,7 +17,6 @@
 
 ## How to Run (Setup Instructions)
 1. Clone the repository:  
-    
 2. Open in your IDE (e.g. Visual Studio)  
 3. Restore dependencies / NuGet packages  
 4. Configure database connection (update `appsettings.json` or similar)  
