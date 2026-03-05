@@ -1,0 +1,18 @@
+@model EmployeePortalApp.Models.Employee
+
+<h2>Employee Created</h2>
+
+<div class="alert alert-success">
+    Employee @Model.FullName (ID: @Model.Id) was created successfully.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.Email</dd>
+    <dt class="col-sm-3">Department</dt><dd class="col-sm-9">@Model.Department</dd>
+    <dt class="col-sm-3">Position</dt><dd class="col-sm-9">@Model.Position</dd>
+    <dt class="col-sm-3">Type</dt><dd class="col-sm-9">@Model.Type</dd>
+    <dt class="col-sm-3">Salary</dt><dd class="col-sm-9">@Model.Salary</dd>
+</dl>
+
+<a asp-action="List" class="btn btn-primary">Back to List</a>
+<a asp-action="Create" class="btn btn-secondary">Create Another</a>

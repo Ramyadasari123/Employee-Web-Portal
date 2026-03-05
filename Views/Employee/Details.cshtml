@@ -1,0 +1,19 @@
+@model EmployeePortalApp.Models.Employee
+
+<h2>Employee Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.FullName (ID: @Model.Id)</h5>
+        <p class="card-text"><strong>Email:</strong> @Model.Email</p>
+        <p class="card-text"><strong>Department:</strong> @Model.Department</p>
+        <p class="card-text"><strong>Position:</strong> @Model.Position</p>
+        <p class="card-text"><strong>Employee Type:</strong> @Model.Type</p>
+        <p class="card-text"><strong>Gender:</strong> @Model.Gender</p>
+        <p class="card-text"><strong>Hire Date:</strong> @Model.HireDate.ToString("yyyy-MM-dd")</p>
+        <p class="card-text"><strong>Date of Birth:</strong> @(Model.DateofBirth?.ToString("yyyy-MM-dd") ?? "N/A")</p>
+        <p class="card-text"><strong>Salary:</strong> @Model.Salary?.ToString("C")</p>
+        <a asp-action="List" class="btn btn-primary">Back to List</a>
+        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a>
+    </div>
+</div>

@@ -1,0 +1,136 @@
+﻿@model EmployeeListViewModel
+
+@{
+    ViewData["Title"] = "Employee List";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <a asp-action="Create" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-circle"></i> Create New Employee
+            </a>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(TempData["Message"] as string))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Filter Employees</h5>
+            <span class="badge bg-light text-dark">Total Employees: @Model.TotalCount</span>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-controller="Employee" asp-action="List" class="row g-3">
+                <div class="col-md-3">
+                    <label asp-for="SearchItem" class="form-label">Search by Name</label>
+                    <input asp-for="SearchItem" class="form-control" placeholder="Type a name..." />
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="SelectedDepartment" class="form-label">Department</label>
+                    <select asp-for="SelectedDepartment" asp-items="@ViewBag.Departments" class="form-select">
+                        <option value="">All Departments</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="SelectedType" class="form-label">Employee Type</label>
+                    <select asp-for="SelectedType" asp-items="@ViewBag.EmployeeTypes" class="form-select">
+                        <option value="">All Types</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="PageSize" class="form-label">Items per Page</label>
+                    <select asp-for="PageSize" asp-items="@ViewBag.PageSize" class="form-select" onchange="this.form.submit();">
+                    </select>
+                </div>
+
+                <div class="col-md-1 align-self-end">
+                    <button type="submit" class="btn btn-primary w-100">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-striped mb-0">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Gender</th>
+                        <th>Employee Type</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Employees.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center">No employees found.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var employee in Model.Employees)
+                        {
+                            <tr>
+                                <td>@employee.FullName</td>
+                                <td>@employee.Email</td>
+                                <td>@employee.Position</td>
+                                <td>@employee.Department</td>
+                                <td>@employee.Gender</td>
+                                <td>@employee.Type</td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@employee.Id" class="btn btn-sm btn-info">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-sm btn-warning">Edit</a>
+                                    <form asp-action="Delete" asp-route-id="@employee.Id" method="post" class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to delete this?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <nav aria-label="Employee List Pagination" class="mt-4">
+        <ul class="pagination justify-content-center mb-0">
+            @* First & Prev *@
+            <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("List", "Employee", new { pageNumber = 1, pageSize = Model.PageSize, searchItem = Model.SearchItem, selectedDepartment = Model.SelectedDepartment, selectedType = Model.SelectedType })">« First</a>
+            </li>
+            <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("List", "Employee", new { pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize, searchItem = Model.SearchItem, selectedDepartment = Model.SelectedDepartment, selectedType = Model.SelectedType })">‹ Prev</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("List", "Employee", new { pageNumber = i, pageSize = Model.PageSize, searchItem = Model.SearchItem, selectedDepartment = Model.SelectedDepartment, selectedType = Model.SelectedType })">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("List", "Employee", new { pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize, searchItem = Model.SearchItem, selectedDepartment = Model.SelectedDepartment, selectedType = Model.SelectedType })">Next ›</a>
+            </li>
+            <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("List", "Employee", new { pageNumber = Model.TotalPages, pageSize = Model.PageSize, searchItem = Model.SearchItem, selectedDepartment = Model.SelectedDepartment, selectedType = Model.SelectedType })">Last »</a>
+            </li>
+        </ul>
+    </nav>
+</div>
